@@ -1,0 +1,9 @@
+I installed groovy through homebrew - lookup on google.
+
+groovy environment manager - gvm - this tool helps to manage multiple versions of Groovy.
+I didn't install it as I currently do not have need for multiple versions of groovy. This tool helps manage multiple versions of other languages as well -
+Griffon, Gradle, JBake, etc ... This tool also helps install any of these languages.
+This tool can be installed from the site - gvmtool.net
+
+
+
