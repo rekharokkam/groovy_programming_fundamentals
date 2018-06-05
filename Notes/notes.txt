@@ -7,3 +7,214 @@ This tool can be installed from the site - gvmtool.net
 
 
 
+Groovy generates the bytecodes and runs on JVM
+
+groovyc - tool for compiling - javac is the analogy
+groovy - for executing - java is the analogy
+
+Groovy comes with 2 default editors
+1) groovysh - groovy shell. Execute groovysh and enter into the shell to execute commands.
+Once in the shell execute Groovy Commands. Commands I excuted are -
+
+1 + 1
+println "Hello, World!"
+void sayHello (String name) - When I hit enter groovy understood that the program is incomplete and changed the next line number to 001
+println "hello ${name}"
+}
+name = "Dolly"
+sayHello (name)
+
+Type anything like Sys and press "tab" for auto suggestions.
+
+You can use Java classes inside of groovy script -
+One other way of running groovy script is - groovy -e "<CODE>" Ex - groovy -e "println InetAddress.localHost"
+
+There are 2 ways to run a groovy file
+a) a groovy script can be run by just executing groovy <complete name of the groovy script > EX - groovy hello_world.groovy OR groovy hello_world
+In both cases byte code generated is not stored.
+
+b) generating the byte code to execute -  groovyc hello_world.groovy - will generate a .class file.
+This .class file can be executed as groovy hello_world
+The same byte code can be executed using java as well - java -cp .:/usr/local/Cellar/groovy/2.4.15/libexec/lib/* hello_world
+It is important to add the groovy libs in the classpath as java doesn't identify main class without these lib available in the classpath
+
+2) grovyConsole - a nice GUI for executing the groovy code. PS - when using this tool make sure you check the option "Auto Clear output on Run".
+This option helps in clearing the console.
+
+
+Asserts, imports and def
+------------------------
+Using assert in Groovy helps do the assertions in a very elegant way. It is very widely used in unit testing.
+
+In Groovy default imports are
+    java.lang.*
+    java.util.*
+    java.net.*
+    java.io.*
+    java.math.BigInteger
+    java.math.BigDecimal
+    groovy.lang.*
+    groovy.util.*
+
+
+There are 2 ways to define the data type of a variable - "def" and [int, String, long, float, ...]
+"def" is used when the data type of the variable is not known. static type is used when the data type of the variable is known ahead.
+"def" does dynamic data type binding at the Runtime.
+
+Ex -
+def x = 1
+println x.getClass().getName()
+
+x = 'abc'
+println '\n' + x.getClass().getName()
+
+x = new Date()
+println '\n' + x.getClass().getName()
+
+Using assert with static data type
+
+int x = 1
+assert x.getClass () == java.lang.Integer
+
+
+Integer and Floating Point Types
+--------------------------------
+In groovy while they support the same keywords as java everything is an Object.
+Ex -
+3.getClass().getName() - returns java.lang.Integer
+2343435353453453453.getClass().getName() - returns java.lang.Long
+2343435386787656675765675753453453453.getClass().getName() - returns java.math.BigInteger
+(3.5).getClass().getName() - returns - java.math.BigDecimal
+
+All the mathematical calculations in groovy are done at the BigDecimal level
+
+Its better to do all the calculations at the BigDecimal level -
+Ex - 2.0d - 1.1d - results in 0.8999999999999999 which is not very accurate
+The same if done at the BigDecimal level - 2.0 - 1.1 = 0.9 - more precise and more accurate
+
+In groovy 3/5 results in 0.6
+In java 3/5 results in 0
+
+
+Operator overloading
+--------------------
+look for methods on the Number class from gdk documentation - it has methods like plus, minus, power, multiply which are missing from JDK library.
+look at the operator overloading page - http://groovy-lang.org/operators.html
+
+Groovy Truth - Ex -
+String str = "one"
+def result = str ? 'Found' : 'not found'
+
+Operator overloading exists throughout the groovy library
+
+
+String and Groovy String
+------------------------
+
+def s = 'this is a string'
+println 'single quote : ' + s.getClass().getName() - java.lang.String
+
+s = "this is a string"
+println 'Double quote : ' + s.getClass().getName() - java.lang.String
+
+s = "this is a string with a twist : ${1 + 1}"
+println "an evalator : $s : " + s.getClass().getName() - org.codehaus.groovy.runtime.GStringImpl
+
+an expression is allowed only inside of a string with double quotes. Once a variable is placed inside of a double quoted string then it becomes a GStringImpl
+
+can use +, -, ** on strings as well
+
+Operator Overloading
+--------------------
+
+def s = 'this is a string'
+s + ' and more' - this is a string and more
+s - 'is' - 'is' - th  a string
+
+single plus or minus removes only the first occurrence.
+
+def s = 'abc'
+s * 3 - here abc is repeated 3 times and then assigned to s - 'abcabcabc'
+
+getAt Operator Overriding
+-------------------------
+def s = 'this is a string'
+s[1] - h
+s[-1] - g
+s[-3] - i
+s[0..3] - this
+s[-1..-3] - gni
+s[-3..-1] - ing
+s[0..3, 5..6, 8, 10..-1] - thisisastring
+
+multi line capabilities
+-----------------------
+curly braces is required only if some manipulation is needed. If just a variable is used then curly braces is not required.
+
+String fname ='Graeme'
+String lname = 'Rocher'
+assert "$fname $lname" == 'Graeme Rocher'
+
+String lname = 'Rocher'
+println "$lname".getClass().getName() - org.codehaus.groovy.runtime.GStringImpl
+
+def picard = '''
+oh the vaccuum outside if endless
+Unforgiving, cold, and friendless
+But still we must boldly go
+Make it so, make it so, make it so!
+'''
+
+println picard.readLines() - [, oh the vaccuum outside if endless, Unforgiving, cold, and friendless, But still we must boldly go , Make it so, make it so, make it so!]
+println picard.readLines().size() - 5
+
+Adding a blackslash tells groovy NOT to consider the line break
+
+def picard = '''\
+oh the vaccuum outside if endless\
+Unforgiving, cold, and friendless\
+But still we must boldly go\
+Make it so, make it so, make it so!\
+'''
+
+println picard.readLines().size() - 1
+
+Double quotes multi line strings
+
+def saying = """
+There are ${Integer.toBinaryString(2)} kinds of people in the world
+Those who know binary, and those who don't
+"""
+
+println saying.readLines().size() - 3
+
+forward slash is the delimiter for RE
+
+def zip = ~/\d{5}(-\d{4})?/
+println zip.getClass().getName() - java.util.regex.Matcher
+
+def zip = /\d{5}(-\d{4})?/
+println zip.getClass().getName() - java.lang.String - without the tilda
+
+assert '12345' ==~ zip
+assert '12345-1234' ==~ zip
+
+=~ - returns java.util.regex.Matcher object, ==~ - exact match and return boolean that indicates if there was a match or not
+
+assert '12345 12345-1234 1234'.findAll(zip) == ['12345', '12345-1234']
+this findAll method makes sure it selects all the parts of the given string that matches the pattern.
+
+In groovy, every operator overloading  invokes a method. Ex s + ' add more' - string.plus (' add more')
+In case of == .equals() method is invoked in a null safe way.
+
+/w - in RE means a text character
+/W - means non text character
+
+def testString = 'Flee to me, remote elf!'.toLowerCase().replaceAll (/\W/, '')
+assert testString == 'fleetomeremoteelf'
+assert testString == testString.reverse()
+
+
+
+
+
