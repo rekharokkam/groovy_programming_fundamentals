@@ -207,7 +207,7 @@ this findAll method makes sure it selects all the parts of the given string that
 In groovy, every operator overloading  invokes a method. Ex s + ' add more' - string.plus (' add more')
 In case of == .equals() method is invoked in a null safe way.
 
-/w - in RE means a text character
+/w - in RE means a text character - a-zA-Z0-9_
 /W - means non text character
 
 def testString = 'Flee to me, remote elf!'.toLowerCase().replaceAll (/\W/, '')
